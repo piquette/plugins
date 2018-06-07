@@ -1,6 +1,6 @@
 GOPATH0 := $(firstword $(subst :, ,$(GOPATH)))
 
-all: history
+all: bars
 
-history:
-	go build -o $(GOPATH0)/bin/history.so -buildmode=plugin .
+bars:
+	go build -o $(GOPATH0)/bin/bars.so -buildmode=plugin ./bars

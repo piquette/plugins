@@ -7,9 +7,9 @@ Lorem ipsum.
 ## Available plugins
 Lorem ipsum.
 
-## History
-Backfills financial instrument historical tick data and then periodically pushes new ticks.
-This is accomplished through the [finance-go][finance] `history` package.
+## Bars
+Backfills historical OHLCV bars for specified symbols and then periodically pushes new bars.
+This is accomplished through the [finance-go][finance] `history` and `equity` packages.
 
 ### Configuration
 Example is listed, lorem ipsum.

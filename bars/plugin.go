@@ -1,12 +1,36 @@
-package bars
+package main
 
 import (
 	"encoding/json"
+	"log"
+	"os"
 	"time"
 
 	"github.com/alpacahq/marketstore/executor"
 	"github.com/alpacahq/marketstore/utils/io"
 	"github.com/piquette/finance-go/history"
+)
+
+// Printfer is an interface to be implemented by Logger.
+type Printfer interface {
+	Printf(format string, v ...interface{})
+}
+
+// init sets inital logger defaults.
+func init() {
+	Logger = log.New(os.Stderr, "", log.LstdFlags)
+}
+
+var (
+	// LogLevel is the logging level for this library.
+	// 0: no logging
+	// 1: log everything
+	LogLevel = 1
+
+	// Logger controls how this library performs logging at a package level. It is useful
+	// to customise if you need it prefixed for your application to meet other
+	// requirements
+	Logger Printfer
 )
 
 // Daemon conforms to the BgWorker plugin interface.
@@ -48,6 +72,7 @@ func NewBgWorker(conf map[string]interface{}) (d *Daemon, err error) {
 	// Parse configs.
 	c, err := parse(conf)
 	if err != nil {
+		Logger.Printf("Cannot parse config: %v\n", err)
 		return
 	}
 
@@ -141,9 +166,22 @@ func (d *Daemon) Run() {
 			cs.AddColumn("Volume", volume)
 
 			csm := io.NewColumnSeriesMap()
-			tbk := io.NewTimeBucketKey(symbol + "/OHLCV")
+			if LogLevel > 0 {
+				Logger.Printf("writing..")
+			}
+			tbk := io.NewTimeBucketKey(symbol + "/" + string(d.interval) + "/OHLCV")
 			csm.AddColumnSeries(*tbk, cs)
 			executor.WriteCSM(csm, false)
 		}
+
+		// Sleep.
+		if LogLevel > 0 {
+			Logger.Printf("sleeping..")
+		}
+		time.Sleep(time.Minute * 5)
 	}
+}
+
+func main() {
+	os.Exit(1)
 }

@@ -1,3 +1,4 @@
+.PHONY: all bars
 GOPATH0 := $(firstword $(subst :, ,$(GOPATH)))
 
 all: bars

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/alpacahq/marketstore/executor"
+	"github.com/alpacahq/marketstore/plugins/bgworker"
 	"github.com/alpacahq/marketstore/utils/io"
 	"github.com/piquette/finance-go/history"
 )
@@ -67,7 +68,7 @@ func parseDatetime(s string) (d *history.Datetime, err error) {
 }
 
 // NewBgWorker returns a new bg worker instance.
-func NewBgWorker(conf map[string]interface{}) (d *Daemon, err error) {
+func NewBgWorker(conf map[string]interface{}) (bg bgworker.BgWorker, err error) {
 
 	// Parse configs.
 	c, err := parse(conf)
@@ -77,7 +78,7 @@ func NewBgWorker(conf map[string]interface{}) (d *Daemon, err error) {
 	}
 
 	// Defaults.
-	d = &Daemon{
+	d := Daemon{
 		symbols:  []string{"AAPL"},
 		start:    &history.Datetime{Day: 1, Month: 1, Year: 2018},
 		end:      history.NewDatetime(time.Now()),
@@ -107,11 +108,12 @@ func NewBgWorker(conf map[string]interface{}) (d *Daemon, err error) {
 		d.interval = history.Interval(c.Interval)
 	}
 
+	bg = d
 	return
 }
 
 // Run executes chart bar retrieval and periodic storage.
-func (d *Daemon) Run() {
+func (d Daemon) Run() {
 
 	// TODO: Find most recent timestamp to backfill from,
 	// if it exists.

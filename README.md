@@ -17,7 +17,7 @@ start | string | 01-01-2018 | The point at which to start aggregating bars from
 end | string | current time | The point at which to stop aggregating bars
 interval | string | 1d | The aggregation interval for each bar
 
-Note that start/end must be formatted as mm-dd-yyy. The options for interval can be found in the history package [here][docs]. An example `mkts.yml` file can be found [here][bars]
+Note that start/end must be formatted as mm-dd-yyyy. The options for interval can be found in the history package [here][docs]. An example `mkts.yml` file can be found [here][bars]
 
 
 
